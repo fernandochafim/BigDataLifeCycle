@@ -1,4 +1,4 @@
-<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/LogoFernandoTransparent.png width=270/>  Big Data Life Cycle
+<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/ProjectName.png width=270/>  Big Data Life Cycle
 ===========
 The project explores the steps required for a development of a data product.
 
@@ -6,14 +6,34 @@ TODO
 ## Business Problem Definition
 This is a point common in traditional BI and big data analytics life cycle. Normally it is a non-trivial stage of a big data project to define the problem and evaluate correctly how much potential gain it may have for an organization. It seems obvious to mention this, but it has to be evaluated what are the expected gains and costs of the project.
 
-## Research
-Analyze what other companies have done in the same situation. This involves looking for solutions that are reasonable for your company, even though it involves adapting other solutions to the resources and requirements that your company has. In this stage, a methodology for the future stages should be defined.
-
-## Human Resources Assessment
-Once the problem is defined, it’s reasonable to continue analyzing if the current staff is able to complete the project successfully. Traditional BI teams might not be capable to deliver an optimal solution to all the stages, so it should be considered before starting the project if there is a need to outsource a part of the project or hire more people.
-
 ## Data Acquisition
 This section is key in a big data life cycle; it defines which type of profiles would be needed to deliver the resultant data product. Data gathering is a non-trivial step of the process; it normally involves gathering unstructured data from different sources. To give an example, it could involve writing a crawler to retrieve reviews from a website. This involves dealing with text, perhaps in different languages normally requiring a significant amount of time to be completed.
+
+### Web Scraping - Automatic data collection on the Internet
+
+The web crawling technology provides for an opportunity to improve statistical data quality and to reduce the overall workload for data collection. 
+The automatic data collection software developed here must fulfill several criteria:
+
+1. The software must provide a high level of usability. 
+2. It has to be software that can be easily understood by non-IT users.
+3. The software should provide a surface that enables users with basic IT knowledge to change the data collection procedure (e.g. in case of website changes).
+
+
+
+#### Data Lake - Hadoop
+
+```bash
+fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ jps
+1136 NameNode
+3090 ResourceManager
+3282 NodeManager
+3714 Jps
+1620 SecondaryNameNode
+1322 DataNode
+```
+
+
+
 
 ## Data Munging
 Once the data is retrieved, for example, from the web, it needs to be stored in an easyto-use format. To continue with the reviews examples, let’s assume the data is retrieved from different sites where each has a different display of the data.
