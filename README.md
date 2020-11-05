@@ -1,4 +1,4 @@
-<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/LogoFernandoTransparent.png width=135/> Big Data Life Cycle
+<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/LogoFernandoTransparent.png width=270/> Big Data Life Cycle
 ===========
 The project explores the steps required for a development of a data product.
 
