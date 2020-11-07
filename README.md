@@ -1,4 +1,4 @@
-<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/ProjectName.png width=270/>  Big Data Life Cycle
+<img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/ProjectName.png width=560/>
 ===========
 The project explores the steps required for a development of a data product.
 
@@ -18,9 +18,39 @@ The automatic data collection software developed here must fulfill several crite
 2. It has to be software that can be easily understood by non-IT users.
 3. The software should provide a surface that enables users with basic IT knowledge to change the data collection procedure (e.g. in case of website changes).
 
+#### Data Collection
 
+Activate my virtual enviroment
+
+```bash
+source /home/fernandovcb/virtualenvs/scrapy/bin/activate
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle/TrendingAnalytics$ scrapy list
+YoutubeTrending
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle/TrendingAnalytics$ scrapy list
+YoutubeTrending
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle/TrendingAnalytics$ scrapy crawl YoutubeTrending -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/json/youtubetrending_20201107.json
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ /home/fernandovcb/virtualenvs/scrapy/bin/python /mnt/d/BigDataLifeCycle/dags/dataprocessing/prepare_image_dataset.py -d /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/full -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/img_encoded/youtubetrending_20201107.csv
+```
 
 #### Data Lake - Hadoop
+
+Hadoop is an open-source framework used for storing large bulks of data and running applications on this data across clusters of commodity hardware machines. The Hadoop framework ships with everything you need to develop full-fledged, end-to-end applications, including programs and tools to load data into HDFS (the Hadoop filesystem), execute MapReduce jobs, and monitor the jobs as they run.
+
+**Hadoop Distributed File System (HDFS)**: HDFS is the Java-based filesystem for Hadoop. Using HDFS, we can store data across multiple machines.
+
+![](img/HDFS.png?raw=true)
 
 ```bash
 fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ jps
@@ -32,8 +62,46 @@ fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ jps
 1322 DataNode
 ```
 
+```bash
+fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hadoop fs -ls /user
+Found 1 items
+drwxr-xr-x   - fernandovcb supergroup          0 2020-10-11 22:12 /user/hive
+```
+
+```bash
+fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hdfs dfs -mkdir /user/trending_analytics
+fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hdfs dfs -mkdir /user/trending_analytics/raw_data
+```
 
 
+```bash
+hdfs dfs -ls /user/guru/faces/input
+```
+
+##### Serialize an entire image dataset
+
+Python script to serialize an entire image dataset to a single file, making it more suitable for storage on Hadoop and processing on HDFS. We used only a single serialized file for the entire dataset. Realistically, you’ll want to use multiple serialized files for larger datasets.
+
+For each image in our dataset, we generate a Universally Unique Identifier (UUID) for it (ensuring that each image has a unique ID), followed by loading the image, Base64 encoding it, and writing it to file.
+
+Each image in the dataset is therefore represented in a tab-separated file, consisting of three values:
+
+* The UUID of the image.
+* The original path to the image on disk.
+* The image itself serialized as a Base64 string.
+
+```
+prepare_image_dataset.pyShell
+$ python prepare_image_dataset.py --dataset datasets/caltech_web_faces \
+	--output output/faces/faces_dataset.txt
+```
+
+Load the faces_dataset.txt  file into HDFS:
+
+```bash
+fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hdfs dfs -copyFromLocal ~/PyImageSearch/pyimagesearch-gurus/big_data/output/faces/faces_dataset.txt \
+	/user/trending_analytics/raw_data
+```
 
 ## Data Munging
 Once the data is retrieved, for example, from the web, it needs to be stored in an easyto-use format. To continue with the reviews examples, let’s assume the data is retrieved from different sites where each has a different display of the data.
