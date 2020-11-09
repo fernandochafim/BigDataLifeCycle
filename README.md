@@ -2,6 +2,10 @@
 ===========
 This practice was started under the context of the course "**Data Typology and Lifecycle**" (**Tipología y ciclo de vida de los datos**), belonging to the Master in Data Science of the Open University of Catalonia (UOC).
 
+<span class="get-badge" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Get the DOI badge!">
+    <img data-toggle="modal" data-target="[data-modal='10.5281-zenodo.4256746']" src="https://zenodo.org/badge/310364287.svg" alt="10.5281/zenodo.4256746">
+  </span>
+
 ## Goal
 
 **Creation of a dataset from the data contained in a web.**

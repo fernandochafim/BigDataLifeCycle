@@ -166,3 +166,6 @@ YoutubeTrending
 
 ### DOI 
 
+<span class="get-badge" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Get the DOI badge!">
+    <img data-toggle="modal" data-target="[data-modal='10.5281-zenodo.4256746']" src="https://zenodo.org/badge/310364287.svg" alt="10.5281/zenodo.4256746">
+  </span>
