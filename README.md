@@ -1,24 +1,117 @@
 <img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/ProjectName.png width=560/>
 ===========
-The project explores the steps required for a development of a data product.
+This practice was started under the context of the course "**Data Typology and Lifecycle**" (**Tipología y ciclo de vida de los datos**), belonging to the Master in Data Science of the Open University of Catalonia (UOC).
 
-TODO
-## Business Problem Definition
-This is a point common in traditional BI and big data analytics life cycle. Normally it is a non-trivial stage of a big data project to define the problem and evaluate correctly how much potential gain it may have for an organization. It seems obvious to mention this, but it has to be evaluated what are the expected gains and costs of the project.
+## Goal
 
-## Data Acquisition
-This section is key in a big data life cycle; it defines which type of profiles would be needed to deliver the resultant data product. Data gathering is a non-trivial step of the process; it normally involves gathering unstructured data from different sources. To give an example, it could involve writing a crawler to retrieve reviews from a website. This involves dealing with text, perhaps in different languages normally requiring a significant amount of time to be completed.
+**Creation of a dataset from the data contained in a web.**
+It means apply web scraping as data collection. Web scrapers are computer programs that extract information from web sites. The structure and content of a web page are encoded in Hypertext Markup Language (HTML), which you can see using your browser’s ‘view source’ or ‘inspect element’ function. A scraper understands HTML, and is able to parse and extract information from it. 
 
-### Web Scraping - Automatic data collection on the Internet
+### 1. Context 
 
-The web crawling technology provides for an opportunity to improve statistical data quality and to reduce the overall workload for data collection. 
-The automatic data collection software developed here must fulfill several criteria:
+The first part of any Artificial Intelligence (Computer Vision and Natural Language Processing) project is to get a database. Indeed, having the whole dataset cleaned and labeled only applies on Kaggle, not in real life. Youtube cover images, videos, comments, and information such as likes, dislikes, views, and others represent a great and underused source of data.
 
-1. The software must provide a high level of usability. 
-2. It has to be software that can be easily understood by non-IT users.
-3. The software should provide a surface that enables users with basic IT knowledge to change the data collection procedure (e.g. in case of website changes).
+Knowing all this, this project aims to start developing a sample of this dataset to be explored to design artificial intelligence applications.
 
-#### Data Collection
+### 2- Dataset Title
+
+[**SampleYoutubeTrendingPT**](https://zenodo.org/record/4256746#.X6bRkmhKiUk)
+
+### 3 - Abstract / Description
+
+YouTube (the world-famous video sharing website) maintains a list of the top trending videos on the platform. According to [Variety magazine](http://variety.com/2017/digital/news/youtube-2017-top-trending-videos-music-videos-1202631416/), “To determine the year’s top-trending videos, YouTube uses a combination of factors including measuring users interactions (number of views, shares, comments, and likes).
+The presented dataset is composed of two sequences of files scraped daily named 'youtubetrending_tabular_YYYYMMDD.csv'
+and 'youtubetrending_YYYYMMDD.csv'. The first contains 18 columns of fundamental video characteristics; the second contains 3 columns about youTube video thumbnail images.
+
+We used scrapy because it's the most powerful open source library to collect web data and selenium. After all, youtube there is a lot of javascript on its page, and selenium is interesting to gather information correctly from this kind of web. Selenium is considerably slow and will be replaced in a future version to splash.
+
+Our algorithm goes to the trending page in Portuguese from Portugal to gather the URL of the videos listed. After that, it goes to each page to collect the relevant information from each video.
+
+### 4 - Content
+
+#### 4A - Tabular set 
+
+Attribute Information:
+
+* title = Youtube video title
+* url = Youtube video URL
+* views = Youtube video views
+* duration = Youtube video duration
+* likes = Youtube video likes
+* dislikes = Youtube video dislikes
+* channelName = channel name
+* subscribers = number of subscribers
+* description = Youtube video description
+* keywords = keywords
+* date_published = Youtube video published date
+* date_scraped = date when the information was collected
+* tags = tags
+* comments = comments
+* image_urls = Youtube video image url
+* path = relative path to where the image jpg data was stored
+* checksum = a MD5 hash of the image contents
+* status = the file status indication.
+
+#### 4B - Image set
+
+It's a collection of YouTube Video thumbnail images. Each image in the dataset was serialized as a Base64 string and therefore represented in a tab-separated csv file, consisting of three values:
+
+* The  [Universally Unique Identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier) (UUID) of the image.
+* The original path to the image on disk.
+* The image itself serialized as a Base64 string.
+
+#### 4C - Text set
+
+**TODO**
+
+This part will be developed soon. For now, we scraped only the first comment for testing purposes.
+
+### 5 - Graphic Representation / Profiling of dataset
+
+![](img/out.png?raw=true)
+
+### 6 - Acknowledgment
+
+I would like to extend my sincere thanks to:
+
+[the Video Understanding group within Google Research](https://research.google.com/youtube8m/people.html).
+
+[Karan Murthy](https://github.com/karanmurthy7/youtube-tag-recommender)
+
+### 7 - Inspiration
+
+This dataset aims to be useful for Artificial Intelligence analytics such as Time Series Forecastings (expected number of views in N days), Regression (predict the best duration), and Classification tasks (automatize tags),... Combine image, text, and tabular data in the same model is one of the main sources of inspiration to start this data collection.
+
+Just with the image set, we can apply:
+
+* Faces detection
+![](img/faces_detection.png?raw=true)
+
+* Label detection
+![](img/label_detection.png?raw=true)
+
+* Object detection
+![](img/object_detection.png?raw=true)
+
+* Subject detection
+![](img/subject_detection.png?raw=true)
+
+* Text detection
+![](img/text_detection.png?raw=true)
+
+### 8 - License
+
+<div style="float: left; margin-right: 1em;">
+  <img src="https://i.creativecommons.org/p/zero/1.0/88x31.png" alt="CC0">
+</div>
+
+**Released Under CC0: Public Domain License**
+
+We choose this license because CC0 imposes no legal obligation to provide attribution, courtesy, good practice, norms, and community expectations often mean that you should give credit anyway. Giving proper credit helps others understand the origin of the text so they can learn more and identify any changes that have been made.
+
+### Manual Steps
+
+These steps were done manually for testing purposes but it will be automated using Apache Airflow /dags/youtube_dag.py
 
 Activate my virtual enviroment
 
@@ -37,14 +130,32 @@ YoutubeTrending
 ```
 
 ```bash
-(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle/TrendingAnalytics$ scrapy crawl YoutubeTrending -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/json/youtubetrending_20201107.json
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle/TrendingAnalytics$ scrapy crawl YoutubeTrending -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/json/youtubetrending_$(date +"%Y%m%d").json
 ```
 
 ```bash
-(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ /home/fernandovcb/virtualenvs/scrapy/bin/python /mnt/d/BigDataLifeCycle/dags/dataprocessing/prepare_image_dataset.py -d /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/full -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/img_encoded/youtubetrending_20201107.csv
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ mkdir /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/images/$(date +"%Y%m%d")
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ mv -v /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/full/* /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/images/$(date +"%Y%m%d")
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ /home/fernandovcb/virtualenvs/scrapy/bin/python /mnt/d/BigDataLifeCycle/dags/dataprocessing/prepare_image_dataset.py -d /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/images/$(date +"%Y%m%d") -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/img_encoded/youtubetrending_$(date +"%Y%m%d").csv
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ /home/fernandovcb/virtualenvs/scrapy/bin/python /mnt/d/BigDataLifeCycle/dags/dataprocessing/prepare_tabular_dataset.py -d /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/json/youtubetrending_$(date +"%Y%m%d").json -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/csv/youtubetrending_tabular_$(date +"%Y%m%d").csv
+```
+
+```bash
+(scrapy) fernandovcb@DESKTOP-5A84P9I:/mnt/d/BigDataLifeCycle$ /home/fernandovcb/virtualenvs/scrapy/bin/python /mnt/d/BigDataLifeCycle/dags/dataprocessing/prepare_tabular_profiling.py -d /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/csv/youtubetrending_tabular_$(date +"%Y%m%d").csv -o /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/data_profiling/tabular_report_$(date +"%Y%m%d").html
 ```
 
 #### Data Lake - Hadoop
+
+**TODO**
 
 Hadoop is an open-source framework used for storing large bulks of data and running applications on this data across clusters of commodity hardware machines. The Hadoop framework ships with everything you need to develop full-fledged, end-to-end applications, including programs and tools to load data into HDFS (the Hadoop filesystem), execute MapReduce jobs, and monitor the jobs as they run.
 
@@ -77,56 +188,3 @@ fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hdfs dfs -mkdir /user/trendin
 ```bash
 hdfs dfs -ls /user/guru/faces/input
 ```
-
-##### Serialize an entire image dataset
-
-Python script to serialize an entire image dataset to a single file, making it more suitable for storage on Hadoop and processing on HDFS. We used only a single serialized file for the entire dataset. Realistically, you’ll want to use multiple serialized files for larger datasets.
-
-For each image in our dataset, we generate a Universally Unique Identifier (UUID) for it (ensuring that each image has a unique ID), followed by loading the image, Base64 encoding it, and writing it to file.
-
-Each image in the dataset is therefore represented in a tab-separated file, consisting of three values:
-
-* The UUID of the image.
-* The original path to the image on disk.
-* The image itself serialized as a Base64 string.
-
-```
-prepare_image_dataset.pyShell
-$ python prepare_image_dataset.py --dataset datasets/caltech_web_faces \
-	--output output/faces/faces_dataset.txt
-```
-
-Load the faces_dataset.txt  file into HDFS:
-
-```bash
-fernandovcb@DESKTOP-5A84P9I:~/hadoop/hadoop-3.2.0$ hdfs dfs -copyFromLocal ~/PyImageSearch/pyimagesearch-gurus/big_data/output/faces/faces_dataset.txt \
-	/user/trending_analytics/raw_data
-```
-
-## Data Munging
-Once the data is retrieved, for example, from the web, it needs to be stored in an easyto-use format. To continue with the reviews examples, let’s assume the data is retrieved from different sites where each has a different display of the data.
-
-Suppose one data source gives reviews in terms of rating in stars, therefore it is possible to read this as a mapping for the response variable y ∈ {1, 2, 3, 4, 5}. Another data source gives reviews using two arrows system, one for up voting and the other for down voting. This would imply a response variable of the form y ∈ {positive, negative}.
-
-In order to combine both the data sources, a decision has to be made in order to make these two response representations equivalent. This can involve converting the first data source response representation to the second form, considering one star as negative and five stars as positive. This process often requires a large time allocation to be delivered with good quality.
-
-## Data Storage
-Once the data is processed, it sometimes needs to be stored in a database. Big data technologies offer plenty of alternatives regarding this point. The most common alternative is using the Hadoop File System for storage that provides users a limited version of SQL, known as HIVE Query Language. This allows most analytics task to be done in similar ways as would be done in traditional BI data warehouses, from the user perspective. Other storage options to be considered are MongoDB, Redis, and SPARK.
-
-This stage of the cycle is related to the human resources knowledge in terms of their abilities to implement different architectures. Modified versions of traditional data warehouses are still being used in large scale applications. For example, teradata and IBM offer SQL databases that can handle terabytes of data; open source solutions such as postgreSQL and MySQL are still being used for large scale applications.
-
-Even though there are differences in how the different storages work in the background, from the client side, most solutions provide a SQL API. Hence having a good understanding of SQL is still a key skill to have for big data analytics.
-
-This stage a priori seems to be the most important topic, in practice, this is not true. It is not even an essential stage. It is possible to implement a big data solution that would be working with real-time data, so in this case, we only need to gather data to develop the model and then implement it in real time. So there would not be a need to formally store the data at all.
-
-## Exploratory Data Analysis
-Once the data has been cleaned and stored in a way that insights can be retrieved from it, the data exploration phase is mandatory. The objective of this stage is to understand the data, this is normally done with statistical techniques and also plotting the data. This is a good stage to evaluate whether the problem definition makes sense or is feasible.
-
-Data Preparation for Modeling and Assessment
-This stage involves reshaping the cleaned data retrieved previously and using statistical preprocessing for missing values imputation, outlier detection, normalization, feature extraction and feature selection.
-
-## Modelling
-The prior stage should have produced several datasets for training and testing, for example, a predictive model. This stage involves trying different models and looking forward to solving the business problem at hand. In practice, it is normally desired that the model would give some insight into the business. Finally, the best model or combination of models is selected evaluating its performance on a left-out dataset.
-
-## Implementation
-In this stage, the data product developed is implemented in the data pipeline of the company. This involves setting up a validation scheme while the data product is working, in order to track its performance. For example, in the case of implementing a predictive model, this stage would involve applying the model to new data and once the response is available, evaluate the model.

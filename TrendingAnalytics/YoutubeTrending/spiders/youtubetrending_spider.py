@@ -5,6 +5,12 @@ from datetime import timedelta, datetime
 from scrapy import Spider
 from scrapy.loader import ItemLoader
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from scrapy.selector import Selector
 from scrapy.http import Request
 from YoutubeTrending.items import YoutubeTrendingItem
@@ -14,7 +20,11 @@ class YoutubeTrendingSpider(Spider):
     allowed_domains = ['youtube.com']
 
     def start_requests(self):
-        self.driver = webdriver.Chrome('/mnt/d/BigDataLifeCycle/TrendingAnalytics/webdrivers/chromedriver.exe')
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("--headless")
+        self.driver = webdriver.Chrome(options=options,executable_path='/mnt/d/BigDataLifeCycle/TrendingAnalytics/webdrivers/chromedriver.exe')
         self.driver.get('https://www.youtube.com/feed/trending?gl=PT&hl=pt')
 
         sel = Selector(text=self.driver.page_source)
@@ -36,22 +46,22 @@ class YoutubeTrendingSpider(Spider):
         
         sel = Selector(text=self.driver.page_source)
 
-        title = self.get_title(sel), #title,
-        url = self.get_url(response), #url,
-        views = self.get_views(sel), #views,
-        duration = self.get_duration(sel), #duration,
-        likes = self.get_likes(sel), #likes,
-        dislikes = self.get_dislikes(sel), #dislikes,
-        channelName = self.get_channel_name(sel), #channelName,
-        subscribers = self.get_subscribers(sel), #subscribers,
-        description = self.get_description(sel), #description,
-        keywords = self.get_keywords(sel), #keywords,
-        date_published = self.get_date_published(sel) , #date_published,
+        title = self.get_title(sel),
+        url = self.get_url(response),
+        views = self.get_views(sel),
+        duration = self.get_duration(sel),
+        likes = self.get_likes(sel),
+        dislikes = self.get_dislikes(sel),
+        channelName = self.get_channel_name(sel),
+        subscribers = self.get_subscribers(sel),
+        description = self.get_description(sel),
+        keywords = self.get_keywords(sel),
+        date_published = self.get_date_published(sel),
         date_scraped = self.get_date_scraped()
-        tags = self.get_tags(sel), #tags,
-        #n_comments = self.get_number_of_comments(sel), #n_comments,
-        comments = self.get_comments(sel), #comments,
-        image_urls = self.get_image_url(response), #[imageURL]
+        tags = self.get_tags(sel),
+        #n_comments = self.get_number_of_comments(sel),
+        image_urls = self.get_image_url(response),
+        comments = self.get_comments(),
 
         l.add_value('title', title)
         l.add_value('url', url)
@@ -191,14 +201,24 @@ class YoutubeTrendingSpider(Spider):
     #    raw = selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
     #    return int(sub('[^0-9]','', str(raw)))
 
-    def get_comments(self, selector):
+    def get_comments(self):
         """
         Returns a sample of most relevant comments.
         :param selector: Scrapy Selector of Fetched Page
         :return: string with comments
         """
-        raw = selector.xpath('//*[@id="contents"]').xpath('//*[@id="content-text"]/text()').getall()
-        return str(list(dict.fromkeys(raw)))
+        SCROLL_PAUSE_TIME = 2
+        CYCLES = 7
+        html = self.driver.find_element_by_tag_name('html')
+        html.send_keys(Keys.PAGE_DOWN)
+        html.send_keys(Keys.PAGE_DOWN)
+        sleep(SCROLL_PAUSE_TIME * 3)
+        for i in range(CYCLES):
+            html.send_keys(Keys.END)
+            sleep(SCROLL_PAUSE_TIME)
+        comment_elems = self.driver.find_elements_by_xpath('//*[@id="content-text"]')
+        all_comments = comment_elems[0].text #temp
+        return all_comments
 
     def get_image_url(self, response):
         """

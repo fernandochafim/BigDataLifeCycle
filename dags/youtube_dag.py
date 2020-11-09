@@ -3,28 +3,31 @@ Fernando Chafim
 
 """
 
+from datetime import datetime
 from airflow import DAG
 from airflow.contrib.sensors.file_sensor import FileSensor
-from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
-from airflow.operators.hive_operator import HiveOperator
-from datetime import datetime
-
-import fetching_tweet as f_t
-import cleaning_tweet as c_t
+#from airflow.operators.python_operator import PythonOperator
+#from airflow.operators.hive_operator import HiveOperator
 
 default_args = {
     "start_date": datetime(2020, 1, 1),
     "owner": "airflow"
 }
 
-with DAG(dag_id="twitter_dag", schedule_interval="@daily", default_args=default_args) as dag:
-    waiting_for_tweets = FileSensor(task_id="waiting_for_tweets", fs_conn_id="fs_tweet", filepath="data.csv", poke_interval=5)
+first_file = 'youtubetrending_' + datetime.now().strftime("%Y%m%d") + '.json'
 
-    fetching_tweets = PythonOperator(task_id="fetching_tweets", python_callable=f_t.main)
+with DAG(dag_id="youtube_dag", schedule_interval="@daily", default_args=default_args) as dag:
+    #  Space after the bash script name because Airflow apply a Jinja template to it,
+    scraping_youtube = BashOperator(task_id="scraping_youtube", bash_command="/mnt/d/BigDataLifeCycle/dags/dataprocessing/start_scraping.sh ")
+    
+    waiting_for_scraped_data = FileSensor(task_id="waiting_for_scraped_data", fs_conn_id="fs_youtube", filepath=first_file, poke_interval=5)
 
-    cleaning_tweets = PythonOperator(task_id="cleaning_tweets", python_callable=c_t.main)
+    generating_datasets = BashOperator(task_id="scraping_youtube", bash_command="/mnt/d/BigDataLifeCycle/dags/dataprocessing/generating_datasets.sh ")
 
-    storing_tweets = BashOperator(task_id="storing_tweets", bash_command="hadoop fs -put -f /tmp/data_cleaned.csv /tmp/")
+    #TODO
+    #storing_tabular_datalake = BashOperator(task_id="storing_tabular_datalake", bash_command="hadoop fs -put -f /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/csv/youtubetrending_tabular_{{ execution_date }}.csv /tmp/")
 
-    loading_tweets = HiveOperator(task_id="loading_tweets", hql="LOAD DATA INPATH '/tmp/data_cleaned.csv' INTO TABLE tweets")
+    #storing_images_datalake = BashOperator(task_id="storing_images_datalake", bash_command="hadoop fs -put -f /mnt/d/BigDataLifeCycle/TrendingAnalytics/output/images/{{ execution_date }}/* /tmp/images")
+
+    #loading_into_database = HiveOperator(task_id="loading_youtube", hql="LOAD DATA INPATH '/mnt/d/BigDataLifeCycle/TrendingAnalytics/output/csv/youtubetrending_tabular_{{ execution_date }}.csv' INTO TABLE youtube")
