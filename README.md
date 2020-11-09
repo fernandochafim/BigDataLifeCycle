@@ -1,5 +1,7 @@
 <img src=https://github.com/fernandochafim/BigDataLifeCycle/raw/main/img/ProjectName.png width=560/>
 ===========
+
+
 This practice was started under the context of the course "**Data Typology and Lifecycle**" (**Tipología y ciclo de vida de los datos**), belonging to the Master in Data Science of the Open University of Catalonia (UOC).
 
 <span class="get-badge" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Get the DOI badge!">
